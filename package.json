@@ -8,7 +8,7 @@
     "start": "node"
   },
   "engines": {
-    "node": "18.x"
+    "node": ">=16.0"
   },
   "keywords": [
     "API"
