@@ -3,6 +3,7 @@ const mongoose = require('mongoose')
 const DB = require('./lib/dbConnect')
 const cors = require('cors')
 const App = express()
+require('dotenv').config()
 
 DB()
 App.use(cors())
