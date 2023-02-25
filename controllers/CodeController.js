@@ -1,6 +1,7 @@
 const Code =  require('../schemas/code')
 const randomizer = require('randomstring')
-const fetch = require('fetch')
+const fetch = require('node-fetch')
+const FormData = require('form-data')
 
 
 const createCode = async(req, res) => {
@@ -51,8 +52,7 @@ const redeemCode = async(req, res) => {
     const date = new Date();
     const dd = date.getFullYear().toString() + pad2(date.getMonth() + 1) + pad2( date.getDate()) + pad2( date.getHours() ) + pad2( date.getMinutes() ) + pad2( date.getSeconds() )
     const reqid = dd+randomizer.generate(5)
-    let myHeaders = new Headers();
-    myHeaders.append("Authorization", "Basic ZWFvZ29sZWt3dUBnbWFpbC5jb206WFI2UThMSFc=")
+    
     let formdata = new FormData();
     formdata.append("serviceID", provider);
     formdata.append("amount", value);
@@ -61,7 +61,7 @@ const redeemCode = async(req, res) => {
 
     let requestOptions = {
     method: 'POST',
-    headers: myHeaders,
+    headers: {"Authorization":"Basic ZWFvZ29sZWt3dUBnbWFpbC5jb206WFI2UThMSFc="},
     body: formdata,
     redirect: 'follow'
     };
