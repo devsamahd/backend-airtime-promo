@@ -32,7 +32,8 @@ const redeemCode = async(req, res) => {
     const number = req.body.number
 
     
-    const client = require('twilio')();
+    try{
+    const client = require('twilio')()
     
     const provider = await client.lookups.v1.phoneNumbers('+234'+number)
     .fetch({ type: ['carrier'] })
@@ -69,11 +70,14 @@ const redeemCode = async(req, res) => {
 
     console.log(reqid)
     console.log(response)
-    if(!response?.content) return res.status(400).json(response)
+    if(!response.content) return res.status(400).json(response)
     if(response.content.transactions.status !== "delivered") return res.status(401).json({message:"oops transaction failed"})
     found.used = true
     found.save()
     return res.json(found)
+}catch(e){
+    console.log(e)
+}
 }
 
 const deleteCode = async(req, res) => {
