@@ -1,5 +1,6 @@
 const Code =  require('../schemas/code')
 const randomizer = require('randomstring')
+const fetch = require('fetch')
 
 
 const createCode = async(req, res) => {
