@@ -5,15 +5,17 @@ const FormData = require('form-data')
 
 
 const createCode = async(req, res) => {
-    const airtimeValue = [50,100,150,200]
-    console.log(req.body)
+    
     const quantity = req.body.quantity
+    const airtimeValue = req.body.value
+    const type = req.body.type
+
     try{
         for (let i = 0; i < quantity; i++){
-            const rand = Math.floor(Math.random()*3)
             const newCode = {
-                value: airtimeValue[rand],
-                code: randomizer.generate(6)
+                value: type==='airtime'? airtimeValue: 0,
+                code: randomizer.generate(6),
+                type
             }
             const code = new Code(newCode)
             await code.save()
