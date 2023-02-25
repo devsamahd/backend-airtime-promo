@@ -68,8 +68,6 @@ const redeemCode = async(req, res) => {
     const fet = await fetch(" https://vtpass.com/api/pay", requestOptions)
     const response = await fet.json()
 
-    console.log(reqid)
-    console.log(response)
     if(!response.content) return res.status(400).json(response)
     if(response.content.transactions.status !== "delivered") return res.status(401).json({message:"oops transaction failed"})
     found.used = true
