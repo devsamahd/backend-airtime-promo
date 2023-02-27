@@ -1,4 +1,4 @@
-const Code =  require('../schemas/code')
+const Code =  require('../schemas/code.model')
 const randomizer = require('randomstring')
 const fetch = require('node-fetch')
 const FormData = require('form-data')
@@ -13,6 +13,7 @@ const createCode = async(req, res) => {
     try{
         for (let i = 0; i < quantity; i++){
             const newCode = {
+                
                 value: type==='airtime'? airtimeValue: 0,
                 code: randomizer.generate(6),
                 type
