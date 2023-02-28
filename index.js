@@ -13,6 +13,7 @@ App.use(cors())
 App.use(express.urlencoded({extended: false}))
 App.use(express.json())
 
+App.get('/', (req, res)=>{return res.status(200).json({message:"server is running, Hurray!"})})
 App.use('/generateCode',require('./routes/code.routes'))
 
 mongoose.connection.once('open',()=>{
