@@ -4,10 +4,18 @@ const codeSchema = new mongoose.Schema({
     code:{type:String, required:true},
     value:{type:Number, required:true},
     type:{type:String, required:true},
-    used:{type:Boolean, default: false},
-    number:{type:Number, default: null},
-    orgId: {type:String, default: null}
-},{timestamps:true})
+    orgId: {type:mongoose.Types.ObjectId, required: true}
+},{
+    timestamps:true,
+    toJSON:{virtuals:true},
+    toObject:{virtuals:true}
+})
 
+codeSchema.virtual('used', {
+    ref:'useds',
+    localField: '_id',
+    foreignField: 'refId',
+    justOne:true
+})  
 
 module.exports = mongoose.model('codes',codeSchema)

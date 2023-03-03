@@ -1,7 +1,8 @@
-const Code =  require('../schemas/code.model')
+const Code =  require('../schemas/Code.model')
 const randomizer = require('randomstring')
 const fetch = require('node-fetch')
 const FormData = require('form-data')
+const Used = require('../schemas/virtuals/Used.model')
 
 
 const createCode = async(req, res) => {
@@ -9,16 +10,19 @@ const createCode = async(req, res) => {
     const quantity = req.body.quantity
     const airtimeValue = req.body.value
     const type = req.body.type
-
+    const orgId = req.body.orgId
     try{
         for (let i = 0; i < quantity; i++){
             const newCode = {
                 
                 value: type==='airtime'? airtimeValue: 0,
                 code: randomizer.generate(6),
-                type
+                type, 
+                orgId
             }
             const code = new Code(newCode)
+            const used = new Used({refId: code._id})
+            await used.save()
             await code.save()
             }
         return res.json({message: `${quantity} new code(s) generated`})
@@ -28,7 +32,9 @@ const createCode = async(req, res) => {
 }
 
 const getAllCode = async(req, res) => {
-    const codes = await Code.find()
+    const codes = await Code.find().populate({
+        path:'used'
+    })
     return res.json(codes)
 }
 
@@ -47,7 +53,7 @@ const redeemCode = async(req, res) => {
     })
     const found = await Code.findOne({code: code}).exec()
     if(!found) return res.status(404).json({status: 404, message:"code doesn't exist"})
-    if(found.used === true) return res.status(403).json({status: 403,   message:"Already used"})
+    if(found.used.status === true) return res.status(403).json({status: 403,   message:"Already used"})
 
     
     const value = found.value
@@ -74,7 +80,7 @@ const redeemCode = async(req, res) => {
 
     if(!response.content) return res.status(400).json(response)
     if(response.content.transactions.status !== "delivered") return res.status(401).json({message:"oops transaction failed"})
-    found.used = true
+    const used = Used.
     found.save()
     return res.json(found)
 }catch(e){
