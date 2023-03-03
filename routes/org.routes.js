@@ -1,10 +1,11 @@
-const { getAllCode } = require('../controllers/CodeController')
-const { createOrg, updateOrg, deleteOrg } = require('../controllers/orgController')
+const { createOrg, updateOrg, deleteOrg, getAllOrg } = require('../controllers/orgController')
 
 const router = require('express').Router()
 
 router.route('/')
-        .get(getAllCode)
+        .get(getAllOrg)
         .post(createOrg)
         .put(updateOrg)
         .delete(deleteOrg)
+
+module.exports = router
