@@ -10,7 +10,7 @@ const createOrg = async(req, res) => {
 }
 
 const updateOrg = async(req, res) => {
-    const orgId = req.body.orgId 
+    const orgId = req.body.orgId
     const newName = req.body.orgName
     const found = await Org.findOne({_id: orgId})
     if(!found) return res.json({message: 'Org doesn\'t exist'})
@@ -20,7 +20,7 @@ const updateOrg = async(req, res) => {
 }
 
 const getAllOrg = async(req, res) => {
-    const orgs = await Org.find()
+    const orgs = await Org.find().populate({path:'codeCount'})
     return res.json(orgs)
 }
 
