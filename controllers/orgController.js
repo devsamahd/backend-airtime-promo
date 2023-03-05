@@ -24,6 +24,7 @@ const getAllOrg = async(req, res) => {
     return res.json(orgs)
 }
 
+
 const deleteOrg = async(req, res) => {
     
 }

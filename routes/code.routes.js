@@ -1,5 +1,5 @@
 const express = require('express')
-const { createCode, getAllCode, redeemCode, deleteCode } = require('../controllers/CodeController')
+const { createCode, getAllCode, redeemCode, deleteCode, getSingleOrgData } = require('../controllers/CodeController')
 const router = express.Router()
 
 router.route('/')
@@ -7,5 +7,6 @@ router.route('/')
     .post(createCode)
     .put(redeemCode)
     .delete(deleteCode)
-
+router.route('/:orgid')
+    .get(getSingleOrgData)
 module.exports = router

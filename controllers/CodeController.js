@@ -31,6 +31,14 @@ const createCode = async(req, res) => {
     }
 }
 
+const getSingleOrgData = async(req, res) => {
+    const orgid = req.params.orgid
+    const data = await Code.find({orgId: orgid}).populate({
+        path:'used'
+    })
+    return res.json(data)
+}
+
 const getAllCode = async(req, res) => {
     const codes = await Code.find().populate({
         path:'used'
@@ -70,18 +78,21 @@ const redeemCode = async(req, res) => {
 
     let requestOptions = {
     method: 'POST',
-    headers: {"Authorization":"Basic ZWFvZ29sZWt3dUBnbWFpbC5jb206WFI2UThMSFc="},
+    headers: {"Authorization":process.env.BASIC_AUTH},
     body: formdata,
     redirect: 'follow'
     };
 
-    const fet = await fetch(" https://vtpass.com/api/pay", requestOptions)
+    const fet = await fetch("https://vtpass.com/api/pay", requestOptions)
     const response = await fet.json()
 
     if(!response.content) return res.status(400).json(response)
     if(response.content.transactions.status !== "delivered") return res.status(401).json({message:"oops transaction failed"})
-    const used = Used.
-    found.save()
+    const used = Used.findOne({refId: found._id})
+    if(!used) res.status(400).json({message:"try again"})
+    used.number = number
+    used.status = true
+    used.save()
     return res.json(found)
 }catch(e){
     console.log(e)
@@ -92,5 +103,5 @@ const deleteCode = async(req, res) => {
 
 }
 
-module.exports = {createCode, getAllCode, redeemCode, deleteCode}
+module.exports = {createCode, getAllCode, redeemCode, getSingleOrgData, deleteCode}
   
