@@ -5,8 +5,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "nodemon",
-    "start": "node index",
-    "deploy": "serverless deploy"
+    "start": "node index"
   },
   "engines": {
     "node": ">=16.0"
