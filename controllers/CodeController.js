@@ -60,10 +60,10 @@ const redeemCode = async(req, res) => {
     })
     const found = await Code.findOne({code: code}).exec()
     if(!found) return res.status(404).json({status: 404, message:"code doesn't exist"})
-    const used = Used.findOne({refId: found._id})
-    if(used) return res.status(403).json({status: 403, message:"Already used"})
-
+    const used =await Used.findOne({refId: found._id}).exec()
+    if(used?.status === true) return res.status(403).json({status: 403, message:"Already used"})
     
+    if(found.type !== "raffle"){    
     const value = found.value
     function pad2(n) { return n < 10 ? '0' + n : n }
     const date = new Date();
@@ -88,8 +88,10 @@ const redeemCode = async(req, res) => {
 
     if(!response.content) return res.status(400).json(response)
     if(response.content.transactions.status !== "delivered") return res.status(401).json({status:"401",message:"oops transaction failed"})
-    
-    const usedNow = new Used({refId: found._id, number:number, status:true})
+    await Used.insertMany([{refId: found._id, number:number, status:true}])
+    return res.json(found)
+}
+    await Used.insertMany([{refId: found._id, number:number, status:true}])
     return res.json(found)
 }catch(e){
     console.log(e)
