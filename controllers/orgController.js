@@ -19,12 +19,10 @@ const updateOrg = async(req, res) => {
     return res.json(data)
 }
 
-
 const getAllOrg = async(req, res) => {
     const orgs = await Org.find().populate({path:'codeCount'})
     return res.json(orgs)
 }
-
 
 const deleteOrg = async(req, res) => {
     
