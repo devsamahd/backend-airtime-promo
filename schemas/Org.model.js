@@ -13,7 +13,7 @@ orgSchema.virtual('codeCount',{
         foreignField: 'orgId',
         localField: '_id',
         count: true
-})
+});
 
 
 module.exports = mongoose.model('orgs', orgSchema)
