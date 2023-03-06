@@ -21,7 +21,7 @@ usedSchema.methods.toJSON = function () {
     const _used = this
     const used = _used.toObject()
 
-    delete used.refId
+    delete used.refId;
     return used
 }
 
