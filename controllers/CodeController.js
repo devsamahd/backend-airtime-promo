@@ -2,7 +2,7 @@ const Code =  require('../schemas/code.model')
 const randomizer = require('randomstring')
 const fetch = require('node-fetch')
 const FormData = require('form-data')
-const Used = require('../schemas/virtuals/used.model')
+const Used = require('../schemas/used.model')
 
 
 const createCode = async(req, res) => {
