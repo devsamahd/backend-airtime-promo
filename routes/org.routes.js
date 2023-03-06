@@ -1,4 +1,4 @@
-const { createOrg, updateOrg, deleteOrg, getAllOrg } = require('../controllers/OrgController')
+const { createOrg, updateOrg, deleteOrg, getAllOrg } = require('../controllers/orgController')
 
 const router = require('express').Router()
 
