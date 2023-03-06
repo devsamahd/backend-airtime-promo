@@ -1,4 +1,4 @@
-const Org = require("../schemas/org.model")
+const Org = require("../schemas/Org.model")
 
 const createOrg = async(req, res) => {
     const orgName = req.body.orgname
