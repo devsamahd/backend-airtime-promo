@@ -25,5 +25,4 @@ usedSchema.methods.toJSON = function () {
     return used
 }
 
-
 module.exports = mongoose.model('useds',usedSchema)

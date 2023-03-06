@@ -15,5 +15,4 @@ orgSchema.virtual('codeCount',{
         count: true
 });
 
-
 module.exports = mongoose.model('orgs', orgSchema)
