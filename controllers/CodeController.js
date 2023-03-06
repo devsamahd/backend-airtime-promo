@@ -1,8 +1,8 @@
-const Code =  require('../schemas/Code.model')
+const Code =  require('../schemas/Code.model.js')
 const randomizer = require('randomstring')
 const fetch = require('node-fetch')
 const FormData = require('form-data')
-const Used = require('../schemas/virtuals/Used.model')
+const Used = require('../schemas/virtuals/Used.model.js')
 
 
 const createCode = async(req, res) => {
