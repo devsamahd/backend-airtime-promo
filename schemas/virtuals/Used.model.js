@@ -1,8 +1,8 @@
 const mongoose = require('mongoose')
 
 const usedSchema = new mongoose.Schema({
-    status: {type:Boolean, required:true, default: false},
-    number: {type:Number, default: null},
+    status: {type:Boolean, required:true},
+    number: {type:Number, required: true},
     refId: {type:mongoose.Types.ObjectId, required:true},
 },{
     timestamps:true,

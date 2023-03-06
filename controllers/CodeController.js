@@ -12,6 +12,7 @@ const createCode = async(req, res) => {
     const type = req.body.type
     const orgId = req.body.orgId
     try{
+        const codes = []
         for (let i = 0; i < quantity; i++){
             const newCode = {
                 
@@ -20,11 +21,9 @@ const createCode = async(req, res) => {
                 type, 
                 orgId
             }
-            const code = new Code(newCode)
-            const used = new Used({refId: code._id})
-            await used.save()
-            await code.save()
+            codes.push(newCode)
             }
+        await Code.insertMany(codes)
         return res.json({message: `${quantity} new code(s) generated`})
     }catch(err){
         return console.log(err)
@@ -61,7 +60,8 @@ const redeemCode = async(req, res) => {
     })
     const found = await Code.findOne({code: code}).exec()
     if(!found) return res.status(404).json({status: 404, message:"code doesn't exist"})
-    if(found.used.status === true) return res.status(403).json({status: 403,   message:"Already used"})
+    const used = Used.findOne({refId: found._id})
+    if(used) return res.status(403).json({status: 403, message:"Already used"})
 
     
     const value = found.value
@@ -87,12 +87,9 @@ const redeemCode = async(req, res) => {
     const response = await fet.json()
 
     if(!response.content) return res.status(400).json(response)
-    if(response.content.transactions.status !== "delivered") return res.status(401).json({message:"oops transaction failed"})
-    const used = Used.findOne({refId: found._id})
-    if(!used) res.status(400).json({message:"try again"})
-    used.number = number
-    used.status = true
-    used.save()
+    if(response.content.transactions.status !== "delivered") return res.status(401).json({status:"401",message:"oops transaction failed"})
+    
+    const usedNow = new Used({refId: found._id, number:number, status:true})
     return res.json(found)
 }catch(e){
     console.log(e)
