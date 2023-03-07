@@ -1,4 +1,4 @@
-const { createOrg, updateOrg, deleteOrg, getAllOrg } = require('../controllers/orgController')
+const { createOrg, updateOrg, deleteOrg, getAllOrg, getSingleOrg } = require('../controllers/orgController')
 
 const router = require('express').Router()
 
@@ -7,6 +7,9 @@ router.route('/')
         .post(createOrg)
         .put(updateOrg)
         .delete(deleteOrg)
+
+router.route('/:orgid')
+        .get(getSingleOrg)
 
 
 

@@ -92,6 +92,8 @@ const redeemCode = async(req, res) => {
     return res.json(found)
 }
     await Used.insertMany([{refId: found._id, number:number, status:true}])
+    found.usable = false
+    found.save()
     return res.json(found)
 }catch(e){
     console.log(e)

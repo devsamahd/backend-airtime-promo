@@ -12,7 +12,7 @@ const createOrg = async(req, res) => {
 const updateOrg = async(req, res) => {
     const orgId = req.body.orgId
     const newName = req.body.orgName
-    const found = await Org.findOne({_id: orgId})
+    const found = await Org.findOne({_id: orgId}).exec()
     if(!found) return res.json({message: 'Org doesn\'t exist'})
     found.orgName = newName
     const data = found.save()
@@ -24,8 +24,13 @@ const getAllOrg = async(req, res) => {
     return res.json(orgs)
 }
 
+const getSingleOrg = async(req, res) => {
+    const id = req.params.orgid
+    const data =await Org.findOne({_id: id}).exec()
+    return res.json(data)
+}
 const deleteOrg = async(req, res) => {
     
 }
 
-module.exports = {createOrg, updateOrg, getAllOrg, deleteOrg}
+module.exports = {createOrg, updateOrg, getAllOrg, getSingleOrg, deleteOrg}
