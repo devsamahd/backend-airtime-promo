@@ -1,6 +1,7 @@
 const mongoose = require('mongoose')
 const orgSchema = new mongoose.Schema({
         orgName: {type:String, required:true},
+        active: {type:Boolean, default: true}
 },{
         timestamps:true,
         toJSON:{virtuals:true},

@@ -16,6 +16,7 @@ App.get('/', (req, res)=>{return res.status(200).json({message:"server is runnin
 
 App.use('/generateCode', require('./routes/code.routes'))
 App.use('/org', require('./routes/org.routes'))
+App.use('/stats', require('./routes/stats.routes'))
 
 mongoose.connection.once('open',()=>{
     App.listen(PORT, ()=>{ console.log('connected') })

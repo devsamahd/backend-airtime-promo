@@ -51,46 +51,46 @@ const redeemCode = async(req, res) => {
 
     
     try{
-    const client = require('twilio')()
-    
-    const provider = await client.lookups.v1.phoneNumbers('+234'+number)
-    .fetch({ type: ['carrier'] })
-    .then(phone_number => {
-        return phone_number.carrier.name === "MTN"? 'mtn': phone_number.carrier.name === "Airtel Nigeria" ? 'airtel' : phone_number.carrier.name === "Globacom (GLO)" ? 'glo' : phone_number.carrier.name === "9Mobile Nigeria (Etisalat)" ? 'etisalat' : null
-    })
-    const found = await Code.findOne({code: code}).exec()
-    if(!found) return res.status(404).json({status: 404, message:"code doesn't exist"})
-    const used =await Used.findOne({refId: found._id}).exec()
-    if(used?.status === true) return res.status(403).json({status: 403, message:"Already used"})
-    
-    if(found.type !== "raffle"){    
-    const value = found.value
-    function pad2(n) { return n < 10 ? '0' + n : n }
-    const date = new Date();
-    const dd = date.getFullYear().toString() + pad2(date.getMonth() + 1) + pad2( date.getDate()) + pad2( date.getHours() ) + pad2( date.getMinutes() ) + pad2( date.getSeconds() )
-    const reqid = dd+randomizer.generate(5)
-    
-    let formdata = new FormData();
-    formdata.append("serviceID", provider);
-    formdata.append("amount", value);
-    formdata.append("phone", number);
-    formdata.append("request_id", reqid);
+        const found = await Code.findOne({code: code}).exec()
+        if(!found) return res.status(404).json({status: 404, message:"code doesn't exist"})
+        const used =await Used.findOne({refId: found._id}).exec()
+        if(used?.status === true) return res.status(403).json({status: 403, message:"Already used"})
+        
+        if(found.type !== "raffle"){  
+        const client = require('twilio')()
 
-    let requestOptions = {
-    method: 'POST',
-    headers: {"Authorization":process.env.BASIC_AUTH},
-    body: formdata,
-    redirect: 'follow'
-    };
+        const provider = await client.lookups.v1.phoneNumbers('+234'+number)
+        .fetch({ type: ['carrier'] })
+        .then(phone_number => {
+            return phone_number.carrier.name === "MTN"? 'mtn': phone_number.carrier.name === "Airtel Nigeria" ? 'airtel' : phone_number.carrier.name === "Globacom (GLO)" ? 'glo' : phone_number.carrier.name === "9Mobile Nigeria (Etisalat)" ? 'etisalat' : null
+        })  
+        const value = found.value
+        function pad2(n) { return n < 10 ? '0' + n : n }
+        const date = new Date();
+        const dd = date.getFullYear().toString() + pad2(date.getMonth() + 1) + pad2( date.getDate()) + pad2( date.getHours() ) + pad2( date.getMinutes() ) + pad2( date.getSeconds() )
+        const reqid = dd+randomizer.generate(5)
+        
+        let formdata = new FormData();
+        formdata.append("serviceID", provider);
+        formdata.append("amount", value);
+        formdata.append("phone", number);
+        formdata.append("request_id", reqid);
 
-    const fet = await fetch("https://vtpass.com/api/pay", requestOptions)
-    const response = await fet.json()
+        let requestOptions = {
+        method: 'POST',
+        headers: {"Authorization":process.env.BASIC_AUTH},
+        body: formdata,
+        redirect: 'follow'
+        };
 
-    if(!response.content) return res.status(400).json(response)
-    if(response.content.transactions.status !== "delivered") return res.status(401).json({status:"401",message:"oops transaction failed"})
-    await Used.insertMany([{refId: found._id, number:number, status:true}])
-    return res.json(found)
-}
+        const fet = await fetch("https://vtpass.com/api/pay", requestOptions)
+        const response = await fet.json()
+
+        if(!response.content) return res.status(400).json(response)
+        if(response.content.transactions.status !== "delivered") return res.status(401).json({status:"401",message:"oops transaction failed"})
+        await Used.insertMany([{refId: found._id, number:number, status:true}])
+        return res.json(found)
+    }
     await Used.insertMany([{refId: found._id, number:number, status:true}])
     found.usable = false
     found.save()
