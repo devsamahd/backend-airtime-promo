@@ -15,7 +15,7 @@ const updateOrg = async(req, res) => {
     const found = await Org.findOne({_id: orgId}).exec()
     if(!found) return res.json({message: 'Org doesn\'t exist'})
     found.orgName = newName
-    const data = found.save()
+    const data = await found.save()
     return res.json(data)
 }
 
