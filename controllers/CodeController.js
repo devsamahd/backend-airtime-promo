@@ -82,6 +82,8 @@ const redeemCode = async(req, res) => {
         if(!response.content) return res.status(400).json(response)
         if(response.content.transactions.status !== "delivered") return res.status(401).json({status:"401",message:"oops transaction failed"})
         await Used.insertMany([{refId: found._id, number:number, status:true}])
+        found.usable = false
+        found.save()
         return res.json(found)
     }
     await Used.insertMany([{refId: found._id, number:number, status:true}])
