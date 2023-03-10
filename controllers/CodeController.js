@@ -56,13 +56,7 @@ const redeemCode = async(req, res) => {
         if(used?.status === true) return res.status(403).json({status: 403, message:"Already used"})
         
         if(found.type !== "raffle"){  
-        const client = require('twilio')()
-
-        const provider = await client.lookups.v1.phoneNumbers('+234'+number)
-        .fetch({ type: ['carrier'] })
-        .then(phone_number => {
-            return phone_number.carrier.name === "MTN"? 'mtn': phone_number.carrier.name === "Airtel Nigeria" ? 'airtel' : phone_number.carrier.name === "Globacom (GLO)" ? 'glo' : phone_number.carrier.name === "9Mobile Nigeria (Etisalat)" ? 'etisalat' : null
-        })  
+        
         const value = found.value
         function pad2(n) { return n < 10 ? '0' + n : n }
         const date = new Date();
@@ -70,7 +64,7 @@ const redeemCode = async(req, res) => {
         const reqid = dd+randomizer.generate(5)
         
         let formdata = new FormData();
-        formdata.append("serviceID", provider);
+        formdata.append("serviceID", "mtn");
         formdata.append("amount", value);
         formdata.append("phone", number);
         formdata.append("request_id", reqid);
