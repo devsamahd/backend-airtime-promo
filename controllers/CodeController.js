@@ -48,10 +48,9 @@ const getAllCode = async(req, res) => {
 const redeemCode = async(req, res) => {
     const code = req.body.code
     const number = req.body.number
-
-    
+    const regex = new RegExp(["^", code, "$"].join(""), "i");
     try{
-        const found = await Code.findOne({code: code}).exec()
+        const found = await Code.findOne({code: regex }).exec()
         if(!found) return res.status(404).json({status: 404, message:"code doesn't exist"})
         const used =await Used.findOne({refId: found._id}).exec()
         if(used?.status === true) return res.status(403).json({status: 403, message:"Already used"})
