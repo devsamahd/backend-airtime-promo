@@ -17,7 +17,11 @@ const createCode = async(req, res) => {
             const newCode = {
                 
                 value: type==='airtime'? airtimeValue: 0,
-                code: randomizer.generate(6),
+                code: randomizer.generate({
+                    length:6,
+                    charset: 'hex',
+                    capitalization: 'uppercase'
+                }),
                 type, 
                 orgId
             }
