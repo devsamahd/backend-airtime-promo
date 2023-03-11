@@ -26,7 +26,7 @@ const getAllOrg = async(req, res) => {
 
 const getSingleOrg = async(req, res) => {
     const id = req.params.orgid
-    const data =await Org.findOne({_id: id}).populate({path:'codeCount'}).exec()
+    const data =await Org.findOne({_id: id}).populate({path:'codeCount usedCode unusedCode unusedAirtimeCode unusedRaffleCode raffleCode airtimeCode'}).exec()
     return res.json(data)
 }
 const deleteOrg = async(req, res) => {
