@@ -51,7 +51,7 @@ const getSingleOrgData = async(req, res) => {
     const { skip, limit, type, status }= req.query
     
     const data = await Code.find({orgId: orgid}).populate({path:'used'}).sort({createdAt: -1})
-    const resp = (data.filter(res => (res.type).includes(type) && ((res.usable).toString()).includes(status.toString()))).slice(skip, skip+limit)
+    const resp = (data.filter(res => (res.type).includes(type) && ((res.usable).toString()).includes(status.toString()))).slice(skip, parseInt(skip)+parseInt(limit))
     const countData = await Code.find({orgId: orgid}).populate({path:'used'}).sort({createdAt: -1})
     const count = (countData.filter(res => (res.type).includes(type) && ((res.usable).toString()).includes(status.toString()))).length
     return res.json({resp, count})
