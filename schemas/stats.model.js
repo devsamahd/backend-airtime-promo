@@ -34,7 +34,9 @@ statSchema.methods.toJSON = function () {
     const _stat = this
     const stat = _stat.toObject()
 
-    delete stat.version;
+    delete stat.version
+    delete stat.hm
+    delete stat.ha
     return stat
 }
 

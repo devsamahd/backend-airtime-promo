@@ -36,10 +36,25 @@ const createCode = async(req, res) => {
 
 const getSingleOrgData = async(req, res) => {
     const orgid = req.params.orgid
-    const data = await Code.find({orgId: orgid}).populate({
-        path:'used'
-    })
-    return res.json(data)
+    if(!req.query){
+        const data = await Code.find({orgId: orgid}).populate({
+            path:'used'
+        }).sort({createdAt: -1})
+        return res.json(data)
+    }else if(!req.query?.skip || !req.query?.limit){
+    const {type, status }= req.query
+    const data = await Code.find({orgId: orgid}).populate({path:'used'}).sort({createdAt: -1})
+    const resp = (data.filter(res => (res.type).includes(type) && ((res.usable).toString()).includes(status.toString())))
+    
+    return res.json(resp)
+    }
+    const { skip, limit, type, status }= req.query
+    
+    const data = await Code.find({orgId: orgid}).populate({path:'used'}).sort({createdAt: -1})
+    const resp = (data.filter(res => (res.type).includes(type) && ((res.usable).toString()).includes(status.toString()))).slice(skip, skip+limit)
+    const countData = await Code.find({orgId: orgid}).populate({path:'used'}).sort({createdAt: -1})
+    const count = (countData.filter(res => (res.type).includes(type) && ((res.usable).toString()).includes(status.toString()))).length
+    return res.json({resp, count})
 }
 
 const getAllCode = async(req, res) => {
@@ -52,7 +67,7 @@ const getAllCode = async(req, res) => {
 const redeemCode = async(req, res) => {
     const code = req.body.code
     const number = req.body.number
-    const regex = new RegExp(["^", code, "$"].join(""), "i");
+    const regex = new RegExp(["^", code, "$"].join(""), "i")
     try{
         const found = await Code.findOne({code: regex }).exec()
         if(!found) return res.status(404).json({status: 404, message:"code doesn't exist"})

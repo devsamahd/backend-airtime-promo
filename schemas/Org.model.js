@@ -7,6 +7,7 @@ const orgSchema = new mongoose.Schema({
         toJSON:{virtuals:true},
         toObject:{virtuals:true}
 })
+
 orgSchema.virtual('codeCount',{
         ref:'codes',
         foreignField: 'orgId',
