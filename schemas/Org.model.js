@@ -19,13 +19,6 @@ orgSchema.virtual('usedCode',{
         ref:'codes',
         foreignField: 'orgId',
         localField: '_id',
-        match:{usable:true},
-        count: true
-})
-orgSchema.virtual('unusedCode',{
-        ref:'codes',
-        foreignField: 'orgId',
-        localField: '_id',
         match:{usable:false},
         count: true
 })
