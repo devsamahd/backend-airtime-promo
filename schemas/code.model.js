@@ -5,7 +5,7 @@ const codeSchema = new mongoose.Schema({
     value:{type:Number, required:true},
     type:{type:String, required:true},
     usable: {type:Boolean, default: true},
-    orgId: {type:mongoose.Types.ObjectId, required: true}
+    orgId: {type:mongoose.Types.ObjectId, index:true, required: true}
 },{
     timestamps:true,
     toJSON:{virtuals:true},
