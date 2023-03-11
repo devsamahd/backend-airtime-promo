@@ -26,7 +26,7 @@ orgSchema.virtual('unusedAirtimeCode',{
         ref:'codes',
         foreignField: 'orgId',
         localField: '_id',
-        match:{usable:false, type: 'airtime'},
+        match:{usable:true, type: 'airtime'},
         count: true
 })
 orgSchema.virtual('airtimeCode',{
@@ -40,7 +40,7 @@ orgSchema.virtual('unusedRaffleCode',{
         ref:'codes',
         foreignField: 'orgId',
         localField: '_id',
-        match:{usable:false, type: 'raffle'},
+        match:{usable:true, type: 'raffle'},
         count: true
 })
 orgSchema.virtual('raffleCode',{
