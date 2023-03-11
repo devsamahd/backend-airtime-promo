@@ -14,14 +14,11 @@ const createCode = async(req, res) => {
     try{
         const codes = []
         for (let i = 0; i < quantity; i++){
+            
             const newCode = {
                 
                 value: type==='airtime'? airtimeValue: 0,
-                code: randomizer.generate({
-                    length:6,
-                    charset: 'hex',
-                    capitalization: 'uppercase'
-                }),
+                code: randomizer.generate({length:2,charset: 'hex',capitalization: 'uppercase'})+randomizer.generate({length:1,charset: 'numeric'})+randomizer.generate({length:1,charset: 'alphabetic',capitalization: 'uppercase'})+randomizer.generate({length:2,charset: 'hex',capitalization: 'uppercase'}),
                 type, 
                 orgId
             }
