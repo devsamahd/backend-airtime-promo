@@ -34,6 +34,8 @@ const createCode = async(req, res) => {
     }
 }
 
+
+
 const getSingleOrgData = async(req, res) => {
     const orgid = req.params.orgid
     if(!req.query){
@@ -47,6 +49,14 @@ const getSingleOrgData = async(req, res) => {
     const resp = (data.filter(res => (res.type).includes(type) && ((res.usable).toString()).includes(status.toString())))
     
     return res.json(resp)
+    }else if(!req.query?.type && !req.query?.status){
+        const { skip }= req.query
+        
+        const resp = await Code.find({orgId: orgid}).populate({path:'used'}).sort({createdAt: -1}).skip(skip).limit(10)
+        const count = await Code.find({orgId: orgid}).populate({path:'used'}).sort({createdAt: -1}).count()
+
+        return res.json({resp, count})
+        
     }
     const { skip, limit, type, status }= req.query
     
@@ -56,6 +66,8 @@ const getSingleOrgData = async(req, res) => {
     const count = (countData.filter(res => (res.type).includes(type) && ((res.usable).toString()).includes(status.toString()))).length
     return res.json({resp, count})
 }
+
+
 
 const getAllCode = async(req, res) => {
     const codes = await Code.find().populate({
