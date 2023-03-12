@@ -40,17 +40,34 @@ const getSingleOrgData = async(req, res) => {
             path:'used'
         }).sort({createdAt: -1}).hint({orgId: 1}).exec()
         return res.json(data)
-    }else if(!req.query?.skip || !req.query?.limit){
-    const {type, status }= req.query
-    const data = await Code.find({orgId: orgid}).populate({path:'used'}).sort({createdAt: -1})
-    const resp = (data.filter(res => (res.type).includes(type) && ((res.usable).toString()).includes(status.toString())))
-    
-    return res.json(resp)
-    }else if(!req.query?.type && !req.query?.status && req.query.skip){
+    }
+    else if(!req.query?.type && !req.query?.status){
         const { skip }= req.query
         const limit = req.query.limit || 10
         
-        const resp = await Code.find({orgId: orgid}).populate({path:'used'}).sort({createdAt: -1}).skip(skip).limit(limit)
+        const resp = await Code.find({orgId: orgid}).populate({path:'used'}).sort({createdAt: -1}).skip(skip).limit(limit).exec()
+
+        const count = await Code.find({orgId: orgid}).populate({path:'used'}).sort({createdAt: -1}).count()
+
+        return res.json({resp, count})
+        
+    }
+    else if(!req.query?.type && req.query?.status){
+        const { skip }= req.query
+        const limit = req.query.limit || 10
+        
+        const resp = await Code.find({orgId: orgid, usable: req.query.status}).populate({path:'used'}).sort({createdAt: -1}).skip(skip).limit(limit).exec()
+
+        const count = await Code.find({orgId: orgid}).populate({path:'used'}).sort({createdAt: -1}).count()
+
+        return res.json({resp, count})
+        
+    }
+    else if(req.query?.type && !req.query?.status){
+        const { skip }= req.query
+        const limit = req.query.limit || 10
+        
+        const resp = await Code.find({orgId: orgid, type:req.query.type}).populate({path:'used'}).sort({createdAt: -1}).skip(skip).limit(limit).exec()
 
         const count = await Code.find({orgId: orgid}).populate({path:'used'}).sort({createdAt: -1}).count()
 
@@ -59,10 +76,8 @@ const getSingleOrgData = async(req, res) => {
     }
     const { skip, limit, type, status }= req.query
     
-    const data = await Code.find({orgId: orgid}).populate({path:'used'}).sort({createdAt: -1})
-    const resp = (data.filter(res => (res.type).includes(type) && ((res.usable).toString()).includes(status.toString()))).slice(skip, parseInt(skip)+parseInt(limit))
-    const countData = await Code.find({orgId: orgid}).populate({path:'used'}).sort({createdAt: -1})
-    const count = (countData.filter(res => (res.type).includes(type) && ((res.usable).toString()).includes(status.toString()))).length
+    const resp = await Code.find({orgId: orgid, usable:status, type:type}).skip(skip).limit(limit).populate({path:'used'}).sort({createdAt: -1}).exec()
+    const count = await Code.find({orgId: orgid, usable:status, type:type}).populate({path:'used'}).sort({createdAt: -1}).count()
     return res.json({resp, count})
 }
 
