@@ -46,10 +46,11 @@ const getSingleOrgData = async(req, res) => {
     const resp = (data.filter(res => (res.type).includes(type) && ((res.usable).toString()).includes(status.toString())))
     
     return res.json(resp)
-    }else if(!req.query?.type && !req.query?.status){
+    }else if(!req.query?.type && !req.query?.status && req.query.skip){
         const { skip }= req.query
+        const limit = req.query.limit || 10
         
-        const resp = await Code.find({orgId: orgid}).populate({path:'used'}).sort({createdAt: -1}).skip(skip).limit(10)
+        const resp = await Code.find({orgId: orgid}).populate({path:'used'}).sort({createdAt: -1}).skip(skip).limit(limit)
 
         const count = await Code.find({orgId: orgid}).populate({path:'used'}).sort({createdAt: -1}).count()
 
