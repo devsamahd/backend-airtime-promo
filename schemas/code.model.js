@@ -19,4 +19,13 @@ codeSchema.virtual('used', {
     justOne:true
 })  
 
+codeSchema.methods.toJSON = function () {
+    const _code = this
+    const code = _code.toObject()
+
+    delete code.orgId
+    delete code.updatedAt
+    return code
+}
+
 module.exports = mongoose.model('codes',codeSchema)

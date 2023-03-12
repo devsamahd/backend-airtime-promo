@@ -30,7 +30,12 @@ const getSingleOrg = async(req, res) => {
     return res.json(data)
 }
 const deleteOrg = async(req, res) => {
-    
+    const orgId = req.params.orgid
+    const found = await Org.findOne({_id: orgId}).exec()
+    if (!found) return res.status(404).json({message:"not found"})
+    found.remove()
+    const re=await found.save()
+    return res.json(re)
 }
 
 module.exports = {createOrg, updateOrg, getAllOrg, getSingleOrg, deleteOrg}

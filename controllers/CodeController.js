@@ -35,10 +35,10 @@ const createCode = async(req, res) => {
 
 const getSingleOrgData = async(req, res) => {
     const orgid = req.params.orgid
-    if(!req.query){
+    if(!req.query?.skip && !req.query?.limit && !req.query?.type && !req.query?.status){
         const data = await Code.find({orgId: orgid}).populate({
             path:'used'
-        }).sort({createdAt: -1})
+        }).sort({createdAt: -1}).hint({orgId: 1}).exec()
         return res.json(data)
     }else if(!req.query?.skip || !req.query?.limit){
     const {type, status }= req.query
@@ -50,6 +50,7 @@ const getSingleOrgData = async(req, res) => {
         const { skip }= req.query
         
         const resp = await Code.find({orgId: orgid}).populate({path:'used'}).sort({createdAt: -1}).skip(skip).limit(10)
+
         const count = await Code.find({orgId: orgid}).populate({path:'used'}).sort({createdAt: -1}).count()
 
         return res.json({resp, count})

@@ -6,11 +6,11 @@ router.route('/')
         .get(getAllOrg)
         .post(createOrg)
         .put(updateOrg)
-        .delete(deleteOrg)
+        
 
 router.route('/:orgid')
         .get(getSingleOrg)
-
+        .delete(deleteOrg)
 
 
 module.exports = router

@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
+const Code = require('./code.model')
 const orgSchema = new mongoose.Schema({
-        orgName: {type:String, required:true},
-        active: {type:Boolean, default: true}
+        orgName: {type:String, required:true}
 },{
         timestamps:true,
         toJSON:{virtuals:true},
@@ -49,6 +49,12 @@ orgSchema.virtual('raffleCode',{
         localField: '_id',
         match:{type: 'raffle'},
         count: true
+})
+
+orgSchema.pre('remove',async function(next){
+        const orgId = this._id
+        await Code.deleteMany({orgId: orgId})
+        next()
 })
 
 module.exports = mongoose.model('orgs', orgSchema)
