@@ -18,6 +18,5 @@ App.use('/generateCode', require('./routes/code.routes'))
 App.use('/org', require('./routes/org.routes'))
 
 mongoose.connection.once('open',()=>{
-    const httpServer =  App.listen(PORT, ()=>{ console.log('connected') })
-    httpServer.setTimeout(1000)
+    App.listen(PORT, ()=>{ console.log('connected') })
 })

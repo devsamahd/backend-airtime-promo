@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "nodemon",
-    "start": "node index"
+    "start": "node --max-old-space-size=4096 index"
   },
   "engines": {
     "node": ">=16.0"
