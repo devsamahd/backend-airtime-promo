@@ -63,7 +63,7 @@ const getSingleOrgData = async(req, res) => {
         
         const resp = await Code.find({orgId: orgid, type:req.query.type}).lean().populate({path:'used'}).skip(skip).limit(limit)
 
-        const count = await Code.find({orgId: orgid}).lean().populate({path:'used'}).count()
+        const count = await Code.find({orgId: orgid, type:req.query.type}).lean().populate({path:'used'}).count()
 
         return res.json({resp, count})
         
