@@ -20,6 +20,7 @@ const updateOrg = async(req, res) => {
     return res.json(data)
 }
 
+
 const getAllOrg = async(req, res) => {
     const orgs = await Org.find().lean()
     redisClient.set("allOrgs", JSON.stringify(orgs),{
