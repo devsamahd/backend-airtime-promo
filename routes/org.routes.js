@@ -1,9 +1,10 @@
 const { createOrg, updateOrg, deleteOrg, getAllOrg, getSingleOrg } = require('../controllers/orgController')
+const cache = require('../middleware/redisCache')
 
 const router = require('express').Router()
 
 router.route('/')
-        .get(getAllOrg)
+        .get(cache, getAllOrg)
         .post(createOrg)
         .put(updateOrg)
         

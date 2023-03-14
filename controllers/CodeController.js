@@ -3,6 +3,9 @@ const randomizer = require('randomstring')
 const fetch = require('node-fetch')
 const FormData = require('form-data')
 const Used = require('../schemas/used.model')
+const client = require('../lib/redis')
+const redisClient = require('../lib/redis')
+
 
 
 const createCode = async(req, res) => {
@@ -42,9 +45,12 @@ const getSingleOrgData = async(req, res) => {
         const resp = await Code.find({orgId: orgid}).lean().populate({path:'used'}).skip(skip).limit(limit)
 
         const count = await Code.find({orgId: orgid}).lean().populate({path:'used'}).count()
-
-        return res.json({resp, count})
-        
+        const name = orgid+skip.toString()+limit.toString()
+        redisClient.set(name,JSON.stringify({resp, count}),{
+            EX: 180,
+            NX: true,
+          })
+        return res.json({resp, count}) 
     }
     else if(!req.query?.type && req.query?.status){
         const { skip }= req.query
@@ -53,9 +59,12 @@ const getSingleOrgData = async(req, res) => {
         const resp = await Code.find({orgId: orgid, usable: req.query.status}).lean().populate({path:'used'}).skip(skip).limit(limit)
 
         const count = await Code.find({orgId: orgid}).lean().populate({path:'used'}).count()
-
-        return res.json({resp, count})
-        
+        const name = orgid+skip.toString()+limit.toString()+status
+        redisClient.set(name, JSON.stringify({resp, count}),{
+            EX: 180,
+            NX: true,
+          })
+        return res.json({resp, count})    
     }
     else if(req.query?.type && !req.query?.status){
         const { skip }= req.query
@@ -64,7 +73,11 @@ const getSingleOrgData = async(req, res) => {
         const resp = await Code.find({orgId: orgid, type:req.query.type}).lean().populate({path:'used'}).skip(skip).limit(limit)
 
         const count = await Code.find({orgId: orgid, type:req.query.type}).lean().populate({path:'used'}).count()
-
+        const name = orgid+skip.toString()+limit.toString()+type
+        redisClient.set(name, {resp, count},{
+            EX: 180,
+            NX: true,
+          })
         return res.json({resp, count})
         
     }
@@ -72,6 +85,11 @@ const getSingleOrgData = async(req, res) => {
     
     const resp = await Code.find({orgId: orgid, usable:status, type:type}).lean().skip(skip).limit(limit).populate({path:'used'})
     const count = await Code.find({orgId: orgid, usable:status, type:type}).lean().populate({path:'used'}).count()
+    const name = orgid+skip.toString()+limit.toString()+type+status
+        redisClient.set(name,{resp, count},{
+            EX: 180,
+            NX: true,
+          })
     return res.json({resp, count})
 }
 

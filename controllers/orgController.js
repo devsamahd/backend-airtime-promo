@@ -1,3 +1,4 @@
+const redisClient = require("../lib/redis")
 const Org = require("../schemas/Org.model")
 
 const createOrg = async(req, res) => {
@@ -20,7 +21,11 @@ const updateOrg = async(req, res) => {
 }
 
 const getAllOrg = async(req, res) => {
-    const orgs = await Org.find().populate({path:'codeCount'})
+    const orgs = await Org.find().lean()
+    redisClient.set("allOrgs", JSON.stringify(orgs),{
+        EX: 300,
+        NX: true,
+      })
     return res.json(orgs)
 }
 
